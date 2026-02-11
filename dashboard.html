@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGS Portal | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2e7d32; --bg: #f8fafc; --text: #1e293b; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); }
+        
+        /* Modern Header */
+        .header { background: white; padding: 1.5rem 8%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .brand { display: flex; align-items: center; gap: 15px; color: var(--primary); font-weight: 800; font-size: 22px; }
+        .logout-btn { padding: 10px 20px; border-radius: 12px; border: 2px solid #ff4444; color: #ff4444; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .logout-btn:hover { background: #ff4444; color: white; }
+
+        /* Welcome Banner */
+        .hero { padding: 60px 8% 40px; background: white; border-bottom: 1px solid #e2e8f0; }
+        .hero h1 { font-size: 36px; margin: 0; color: var(--text); }
+        .dept-tag { display: inline-block; padding: 6px 16px; background: #dcfce7; color: #166534; border-radius: 20px; font-weight: 600; margin-top: 10px; text-transform: uppercase; font-size: 14px; }
+
+        /* Dashboard Grid */
+        .container { padding: 40px 8%; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 25px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card { background: white; padding: 35px; border-radius: 24px; text-decoration: none; color: inherit; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
+        .card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; display: block; }
+        .card h3 { font-size: 22px; margin: 0 0 10px; }
+        .card p { color: #64748b; font-size: 15px; line-height: 1.5; margin: 0; }
+        .card::after { content: '→'; position: absolute; right: 30px; bottom: 30px; font-size: 24px; color: var(--primary); opacity: 0; transition: 0.3s; }
+        .card:hover::after { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <img src="1000397721.jpg" width="45" style="border-radius: 8px;">
+            <span>IGS PORTAL</span>
+        </div>
+        <a href="index.html" class="logout-btn">Logout</a>
+    </header>
+
+    <section class="hero">
+        <h1 id="studentName">Hello, Student!</h1>
+        <div class="dept-tag" id="deptTag">Department</div>
+    </section>
+
+    <div class="container">
+        <p class="section-title">Academic Modules</p>
+        <div class="grid" id="subjectGrid">
+            </div>
+        
+        <p class="section-title" style="margin-top: 60px;">Tools & Resources</p>
+        <div class="grid">
+            <a href="summaries.html" class="card">
+                <i class="fas fa-book-open"></i>
+                <h3>Literature Summaries</h3>
+                <p>Access notes for "The Lion and the Jewel" and more.</p>
+            </a>
+            <a href="history.html" class="card">
+                <i class="fas fa-history"></i>
+                <h3>Result History</h3>
+                <p>Track your scores from previous mock examinations.</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const userData = JSON.parse(localStorage.getItem('igs_user'));
+        if (!userData) window.location.href = 'index.html';
+
+        document.getElementById('studentName').innerText = `Hello, ${userData.name}!`;
+        document.getElementById('deptTag').innerText = userData.dept;
+
+        // Smart Subject Logic
+        const core = ["English", "Maths", "Civic Education"];
+        const depts = {
+            science: ["Biology", "Chemistry", "Physics", "Geography"],
+            art: ["Literature", "Government", "CRS", "Economics"],
+            commercial: ["Commerce", "Marketing", "Economics", "Accounts"]
+        };
+
+        const mySubjects = [...core, ...depts[userData.dept]];
+        const grid = document.getElementById('subjectGrid');
+
+        mySubjects.forEach(subject => {
+            grid.innerHTML += `
+                <a href="quiz.html?sub=${subject}" class="card">
+                    <i class="fas ${getIcon(subject)}"></i>
+                    <h3>${subject}</h3>
+                    <p>Objective and Theory questions for SS2 term exams.</p>
+                </a>
+            `;
+        });
+
+        function getIcon(sub) {
+            const icons = { 'Maths': 'fa-calculator', 'English': 'fa-pen-nib', 'Biology': 'fa-dna', 'Physics': 'fa-atom', 'Chemistry': 'fa-flask' };
+            return icons[sub] || 'fa-graduation-cap';
+        }
+    </script>
+</body>
+</html>

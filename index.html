@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGS Portal | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2e7d32; --accent: #ffd700; }
+        body { 
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('1000397710.png');
+            background-size: cover; background-position: center;
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .login-container {
+            background: rgba(255, 253, 208, 0.9); /* Creamy background with transparency */
+            backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 500px; /* Bigger box as requested */
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            border: 2px solid var(--primary);
+        }
+        .logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        h2 { color: var(--primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 30px; }
+        input, select {
+            width: 100%; padding: 18px; margin: 15px 0;
+            border-radius: 15px; border: 2px solid #ddd;
+            font-size: 16px; transition: 0.3s; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: #fff; }
+        button {
+            background: var(--primary); color: white; border: none;
+            padding: 20px; width: 100%; border-radius: 15px;
+            font-size: 18px; font-weight: 600; cursor: pointer;
+            margin-top: 25px; transition: 0.3s; box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+        }
+        button:hover { background: #1b5e20; transform: translateY(-3px); box-shadow: 0 15px 25px rgba(46, 125, 50, 0.4); }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <img src="1000397721.jpg" class="logo">
+    <h2>IGHILE GROUP OF SCHOOLS</h2>
+    <div id="loginForm">
+        <input type="text" id="student_name" placeholder="Full Name (e.g. John Doe)" required>
+        <select id="course" required>
+            <option value="">-- Choose Department --</option>
+            <option value="science">SCIENCE</option>
+            <option value="art">ART</option>
+            <option value="commercial">COMMERCIAL</option>
+        </select>
+        <button onclick="handleLogin()">ENTER PORTAL</button>
+    </div>
+</div>
+
+<script>
+    function handleLogin() {
+        const name = document.getElementById('student_name').value;
+        const dept = document.getElementById('course').value;
+        
+        if (name && dept) {
+            // Store user info in LocalStorage (Modern way to handle sessions without PHP)
+            localStorage.setItem('igs_user', JSON.stringify({ name, dept }));
+            window.location.href = 'dashboard.html';
+        } else {
+            alert("Oga, please enter your name and select a department!");
+        }
+    }
+</script>
+
+</body>
+</html>

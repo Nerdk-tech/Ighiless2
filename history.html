@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance History | IGS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2e7d32; --bg: #f8fafc; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding: 40px 8%; }
+        
+        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        
+        .history-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #f1f5f9; padding: 20px; color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 20px; border-bottom: 1px solid #f1f5f9; font-size: 15px; }
+        
+        .subject-name { font-weight: 700; color: #1e293b; }
+        .score-badge { background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 8px; font-weight: 800; }
+        .empty-state { text-align: center; padding: 60px; color: #64748b; }
+        .empty-state i { font-size: 50px; margin-bottom: 20px; opacity: 0.3; }
+    </style>
+</head>
+<body>
+
+    <div class="header-area">
+        <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <h1 style="margin:0; font-size: 24px;">Academic Performance</h1>
+    </div>
+
+    <div class="history-card">
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Exam Date</th>
+                    <th>Subject</th>
+                    <th>Performance</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                </tbody>
+        </table>
+        <div id="emptyMsg" class="empty-state" style="display:none;">
+            <i class="fas fa-clipboard-list"></i>
+            <p>No exams recorded yet. Time to start studying!</p>
+        </div>
+    </div>
+
+    <script>
+        const history = JSON.parse(localStorage.getItem('igs_history')) || [];
+        const body = document.getElementById('historyBody');
+        const empty = document.getElementById('emptyMsg');
+
+        if (history.length === 0) {
+            document.getElementById('historyTable').style.display = 'none';
+            empty.style.display = 'block';
+        } else {
+            // Show latest exams first
+            history.reverse().forEach(item => {
+                body.innerHTML += `
+                    <tr>
+                        <td style="color: #64748b;">${item.date}</td>
+                        <td class="subject-name">${item.subject}</td>
+                        <td><span class="score-badge">${item.score}</span></td>
+                    </tr>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

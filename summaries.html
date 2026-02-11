@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literature Library | IGS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2e7d32; --bg: #f1f5f9; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding-bottom: 50px; }
+        
+        .nav-header { background: white; padding: 20px 8%; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); sticky: top; z-index: 10; }
+        .back-link { text-decoration: none; color: var(--primary); font-weight: 700; }
+        
+        .container { padding: 40px 8%; max-width: 1200px; margin: auto; }
+        .page-title { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--primary); }
+        .page-sub { color: #64748b; margin-bottom: 40px; }
+
+        /* Grid Layout */
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
+        
+        /* Modern Card Design */
+        .book-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
+        .book-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--primary); }
+        
+        .author { font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .title { font-size: 22px; font-weight: 800; margin: 0 0 15px 0; line-height: 1.2; }
+        
+        .summary-text { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .summary-text.expanded { display: block; overflow: visible; }
+
+        .meta-section { border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: 15px; font-size: 14px; }
+        .meta-label { font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #64748b; }
+
+        .read-more { background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; padding: 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-header">
+        <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i></a>
+        <h2 style="margin:0; font-size: 20px;">Library Summary</h2>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">WAEC/NECO Novels</h1>
+        <p class="page-sub">Comprehensive summaries, character analysis, and themes for SS2/SS3.</p>
+
+        <div class="book-grid" id="bookGrid">
+            </div>
+    </div>
+
+    <script>
+        const novels = [
+            { id: "antony", title: "Antony and Cleopatra", author: "William Shakespeare", summary: "A tragic play detailing the relationship between Mark Antony and Cleopatra, Queen of Egypt...", characters: "Mark Antony, Cleopatra, Octavius Caesar", themes: ["Love vs. Duty", "Power", "Loyalty"] },
+            { id: "lion_jewel", title: "The Lion and the Jewel", author: "Wole Soyinka", summary: "Set in the village of Ilujinle, the play tells the story of Sidi, the village 'jewel,' and her suitors...", characters: "Sidi, Baroka, Lakunle", themes: ["Tradition", "Modernity", "Vanity"] },
+            { id: "mockingbird", title: "To Kill a Mockingbird", author: "Harper Lee", summary: "Set in the American South, Atticus Finch defends a black man, Tom Robinson, falsely accused of a crime...", characters: "Scout, Atticus, Tom Robinson", themes: ["Racial Injustice", "Moral Education"] },
+            { id: "citizen", title: "Second Class Citizen", author: "Buchi Emecheta", summary: "Adah travels to London to join her husband, finding herself living as a second-class citizen...", characters: "Adah, Francis, Pa Noble", themes: ["Empowerment", "Prejudice", "Immigration"] },
+            { id: "dawn", title: "Unexpected Joy at Dawn", author: "Alex Agyei-Agyiri", summary: "Follows Nii Tackie and Mama Orojo during the 'Ghana Must Go' era, highlighting identity and roots...", characters: "Nii Tackie, Mama Orojo", themes: ["Xenophobia", "Identity", "Political Conflict"] }
+        ];
+
+        const grid = document.getElementById('bookGrid');
+
+        novels.forEach(book => {
+            grid.innerHTML += `
+                <div class="book-card">
+                    <div class="author">${book.author}</div>
+                    <h3 class="title">${book.title}</h3>
+                    <p class="summary-text" id="text-${book.id}">${book.summary}</p>
+                    <button class="read-more" onclick="toggleText('${book.id}')">Read Full Summary</button>
+                    
+                    <div class="meta-section">
+                        <span class="meta-label"><i class="fas fa-users"></i> Key Characters</span>
+                        <div style="color: #64748b">${book.characters}</div>
+                    </div>
+                    
+                    <div class="meta-section">
+                        <span class="meta-label"><i class="fas fa-tags"></i> Core Themes</span>
+                        <div class="tags">
+                            ${book.themes.map(t => `<span class="tag">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        function toggleText(id) {
+            const el = document.getElementById(`text-${id}`);
+            el.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

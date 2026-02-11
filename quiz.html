@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examination | IGS Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2e7d32; --bg: #f8fafc; --accent: #f0fdf4; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); padding-bottom: 100px; }
+        
+        /* Fixed Header */
+        .exam-header { background: white; padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .timer { background: #fff4f4; color: #d32f2f; padding: 10px 20px; border-radius: 12px; font-weight: 800; border: 1px solid #ffcdd2; font-variant-numeric: tabular-nums; }
+        
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        h1 { text-transform: uppercase; letter-spacing: 1px; color: #1e293b; margin: 0; }
+        
+        /* Question Cards */
+        .q-card { background: white; padding: 40px; border-radius: 24px; margin-bottom: 25px; border: 1px solid #e2e8f0; transition: 0.3s; }
+        .ref-card { background: var(--accent); border: 2px solid var(--primary); text-align: center; }
+        
+        .q-num { font-weight: 800; color: var(--primary); margin-bottom: 12px; display: block; font-size: 14px; }
+        .q-text { font-size: 18px; line-height: 1.6; color: #1e293b; margin-bottom: 20px; }
+        
+        textarea { width: 100%; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0; font-family: inherit; font-size: 16px; min-height: 160px; box-sizing: border-box; transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); outline: none; background: #fafafa; }
+
+        /* Submit Button */
+        .submit-container { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center; }
+        .btn-submit { background: var(--primary); color: white; border: none; padding: 18px 60px; border-radius: 15px; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(46,125,50,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="exam-header">
+        <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem;">IGS ONLINE PORTAL</div>
+        <div class="timer" id="timer">45:00</div>
+    </div>
+
+    <div class="container">
+        <h1 id="subTitle">Subject Name</h1>
+        <p style="color: #64748b; margin-bottom: 40px;">Please provide detailed answers for the following theory questions.</p>
+        
+        <div id="questionList">
+            </div>
+    </div>
+
+    <div class="submit-container">
+        <button class="btn-submit" onclick="submitExam()">FINISH & SUBMIT SCRIPT</button>
+    </div>
+
+    <script>
+        const theoryBank = {
+            biology: [
+                "Define 'Cell Theory' and state its three main pillars.",
+                "Explain the process of photosynthesis with a balanced chemical equation.",
+                "Differentiate between Mitosis and Meiosis.",
+                "Describe the circulatory system of a mammal.",
+                "What are Enzymes? List four properties of enzymes.",
+                "Explain the mechanism of inhalation and exhalation in humans.",
+                "Discuss the function of the Kidney in Osmo-regulation.",
+                "Define 'Pollination' and list the agents of pollination."
+            ],
+            physics: [
+                "State Newton's three laws of motion and provide one example for each.",
+                "Define 'Work', 'Energy', and 'Power'. Give their SI units.",
+                "Explain the principles of flotation and Archimedes' Principle.",
+                "A car accelerates from rest at 2m/s² for 10 seconds. Calculate the distance covered.",
+                "Differentiate between Scalar and Vector quantities.",
+                "State the laws of reflection of light.",
+                "Explain the concept of 'Heat Capacity' and 'Specific Heat Capacity'.",
+                "Define 'Elasticity' and state Hooke's Law."
+            ],
+            chemistry: [
+                "Define 'Atomic Number' and 'Mass Number'.",
+                "Explain the differences between Electrovalent and Covalent bonding.",
+                "State and explain Dalton’s Atomic Theory.",
+                "Describe the preparation of Oxygen gas in the laboratory.",
+                "Define 'Hardness of Water' and explain how to remove temporary hardness.",
+                "State the periodic law and explain trends in Ionization Energy across a period.",
+                "Explain 'Molarity' and calculate the mass of 0.5 moles of H₂SO₄.",
+                "List four types of chemical reactions with one example each."
+            ],
+            geography: [
+                "Define 'Rocks' and explain the three main types of rocks.",
+                "Describe the internal structure of the earth (Crust, Mantle, Core).",
+                "Explain the formation of Fold Mountains.",
+                "Discuss the impact of deforestation on the environment.",
+                "Explain the water cycle with the aid of a diagram.",
+                "Describe the characteristics of the Tropical Rainforest vegetation."
+            ],
+            crs: [
+                "Describe the call of Abraham and its significance to his faith.",
+                "Discuss the leadership qualities of Joseph in Egypt.",
+                "Explain the circumstances that led to the death of Eli's sons.",
+                "Describe the encounter between David and Goliath.",
+                "Discuss the significance of the Ten Commandments to the Israelites.",
+                "Explain the role of Deborah as a judge in Israel."
+            ],
+            marketing: [
+                "Define 'Marketing' and explain its importance to a business.",
+                "Discuss the '4 Ps' of the marketing mix.",
+                "Explain the concept of 'Market Segmentation'.",
+                "Differentiate between 'Consumer Markets' and 'Industrial Markets'.",
+                "List and explain five functions of marketing.",
+                "Describe the stages of the 'Product Life Cycle'."
+            ],
+            commerce: [
+                "Define 'Commerce' and show its divisions.",
+                "Explain the functions of a Wholesaler to a Retailer.",
+                "Discuss the importance of 'Insurance' in business.",
+                "Differentiate between 'Home Trade' and 'Foreign Trade'.",
+                "Explain the role of the Central Bank in the Nigerian economy."
+            ],
+            economics: [
+                "Define 'Economics' according to Lord Robbins.",
+                "Explain the laws of Demand and Supply.",
+                "Discuss the concept of 'Price Elasticity of Demand'.",
+                "Explain the factors of production and their respective rewards.",
+                "What is 'Inflation' and what are its causes?"
+            ]
+        };
+
+        const imageBank = {
+            biology: "[attachment_0](attachment)",
+            geography: "[attachment_1](attachment)",
+            physics: "",
+            chemistry: ""
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const sub = params.get('sub') ? params.get('sub').toLowerCase() : 'biology';
+        document.getElementById('subTitle').innerText = sub;
+
+        const container = document.getElementById('questionList');
+
+        // 1. Load Study Reference if available
+        if(imageBank[sub]) {
+            container.innerHTML += `
+                <div class="q-card ref-card">
+                    <span class="q-num">EXAM REFERENCE DIAGRAM</span>
+                    <div style="margin: 20px 0;">${imageBank[sub]}</div>
+                    <p style="font-size: 13px; color: #64748b;">Use this visual to support your technical descriptions.</p>
+                </div>
+            `;
+        }
+
+        // 2. Load All Questions
+        const questions = theoryBank[sub] || ["No questions available for this subject."];
+        questions.forEach((q, i) => {
+            container.innerHTML += `
+                <div class="q-card">
+                    <span class="q-num">QUESTION ${i + 1}</span>
+                    <p class="q-text">${q}</p>
+                    <textarea placeholder="Write your answer here..."></textarea>
+                </div>
+            `;
+        });
+
+        // Timer Logic
+        let totalTime = 2700; 
+        const timerDisplay = document.getElementById('timer');
+        const countdown = setInterval(() => {
+            let mins = Math.floor(totalTime / 60);
+            let secs = totalTime % 60;
+            timerDisplay.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            if(totalTime <= 0) {
+                clearInterval(countdown);
+                alert("Time is up! Your script is being submitted.");
+                submitExam();
+            }
+            totalTime--;
+        }, 1000);
+
+        function submitExam() {
+            if(confirm("Are you sure you want to end the exam?")) {
+                window.location.href = `result.html?sub=${sub}&status=Submitted`;
+            }
+        }
+    </script>
+</body>
+</html>
