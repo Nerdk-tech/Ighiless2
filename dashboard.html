@@ -34,6 +34,12 @@
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         
+        /* Global Feed Styling */
+        .feed-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 40px; }
+        .feed-card { min-width: 220px; background: white; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; }
+        .user-info { display: flex; align-items: center; gap: 10px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+        .avatar { width: 25px; height: 25px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+
         .card { background: var(--white); padding: 25px; border-radius: 24px; text-decoration: none; color: inherit; transition: 0.3s; border: 1px solid #e2e8f0; }
         .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .card i { font-size: 28px; color: var(--primary); margin-bottom: 15px; display: block; }
@@ -67,6 +73,10 @@
     </section>
 
     <div class="container">
+        <p class="section-title">Global Study Feed (All Departments)</p>
+        <div class="feed-scroll" id="globalFeed">
+            </div>
+
         <div class="info-grid">
             <div class="panel">
                 <p class="section-title">Today's Timetable</p>
@@ -93,7 +103,7 @@
             </div>
         </div>
 
-        <p class="section-title">Learning Modules</p>
+        <p class="section-title">Academic Learning Modules</p>
         <div class="subject-grid" id="subjectGrid"></div>
     </div>
 
@@ -109,36 +119,50 @@
         document.getElementById('welcomeName').innerText = `Hello, ${user.name}!`;
         document.getElementById('userDept').innerText = `${user.dept.toUpperCase()} Department`;
 
-        // 1. Core Subjects (Taken by everyone)
+        // 1. Core Subjects
         const core = ["English Language", "Mathematics", "Civic Education", "Digital Technology"];
 
-        // 2. Department Specific Subjects (Livestock included in all)
+        // 2. Department Specific Subjects
         const departmentBanks = {
             science: ["Biology", "Physics", "Chemistry", "Further Maths", "Geography", "Animal Husbandry"],
             art: ["Literature-in-English", "Government", "CRS", "Economics", "Marketing", "Animal Husbandry"],
             commercial: ["Financial Accounting", "Commerce", "Economics", "Marketing", "Insurance", "Animal Husbandry"]
         };
 
-        // 3. Icon Mapping
+        // 3. Global Feed Logic
+        function loadGlobalFeed() {
+            const globalFiles = JSON.parse(localStorage.getItem('igs_global_files')) || [];
+            const feed = document.getElementById('globalFeed');
+            
+            if (globalFiles.length === 0) {
+                feed.innerHTML = `<p style="color:#94a3b8; font-size:13px;">No resources shared yet.</p>`;
+                return;
+            }
+
+            globalFiles.slice(0, 10).forEach(file => {
+                feed.innerHTML += `
+                    <div class="feed-card">
+                        <small style="color:var(--primary); font-weight:800; font-size:10px;">${file.subject.toUpperCase()}</small>
+                        <div style="font-weight:700; font-size:14px; margin: 5px 0;">${file.name}</div>
+                        <div class="user-info">
+                            <div class="avatar">${file.uploader.charAt(0)}</div>
+                            <span style="font-size:11px; color:#64748b;">By <strong>${file.uploader}</strong></span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        loadGlobalFeed();
+
+        // 4. Render Subject Grid
         const icons = {
-            'Mathematics': 'fa-calculator',
-            'English Language': 'fa-pen-nib',
-            'Civic Education': 'fa-landmark',
-            'Digital Technology': 'fa-laptop-code',
-            'Biology': 'fa-dna',
-            'Physics': 'fa-atom',
-            'Chemistry': 'fa-flask',
-            'Literature-in-English': 'fa-book-open',
-            'Government': 'fa-university',
-            'CRS': 'fa-cross',
-            'Economics': 'fa-chart-line',
-            'Marketing': 'fa-ad',
-            'Animal Husbandry': 'fa-paw',
-            'Commerce': 'fa-store',
-            'Financial Accounting': 'fa-file-invoice-dollar'
+            'Mathematics': 'fa-calculator', 'English Language': 'fa-pen-nib', 'Civic Education': 'fa-landmark',
+            'Digital Technology': 'fa-laptop-code', 'Biology': 'fa-dna', 'Physics': 'fa-atom', 'Chemistry': 'fa-flask',
+            'Literature-in-English': 'fa-book-open', 'Government': 'fa-university', 'CRS': 'fa-cross',
+            'Economics': 'fa-chart-line', 'Marketing': 'fa-ad', 'Animal Husbandry': 'fa-paw',
+            'Commerce': 'fa-store', 'Financial Accounting': 'fa-file-invoice-dollar'
         };
 
-        // 4. Render Grid
         const mySubjects = [...core, ...(departmentBanks[user.dept.toLowerCase()] || [])];
         const grid = document.getElementById('subjectGrid');
 
