@@ -54,83 +54,107 @@
 
     <script>
         const theoryBank = {
-            biology: [
-                "Define 'Cell Theory' and state its three main pillars.",
-                "Explain the process of photosynthesis with a balanced chemical equation.",
-                "Differentiate between Mitosis and Meiosis.",
-                "Describe the circulatory system of a mammal.",
-                "What are Enzymes? List four properties of enzymes.",
-                "Explain the mechanism of inhalation and exhalation in humans.",
-                "Discuss the function of the Kidney in Osmo-regulation.",
-                "Define 'Pollination' and list the agents of pollination."
-            ],
-            physics: [
-                "State Newton's three laws of motion and provide one example for each.",
-                "Define 'Work', 'Energy', and 'Power'. Give their SI units.",
-                "Explain the principles of flotation and Archimedes' Principle.",
-                "A car accelerates from rest at 2m/s² for 10 seconds. Calculate the distance covered.",
-                "Differentiate between Scalar and Vector quantities.",
-                "State the laws of reflection of light.",
-                "Explain the concept of 'Heat Capacity' and 'Specific Heat Capacity'.",
-                "Define 'Elasticity' and state Hooke's Law."
-            ],
-            chemistry: [
-                "Define 'Atomic Number' and 'Mass Number'.",
-                "Explain the differences between Electrovalent and Covalent bonding.",
-                "State and explain Dalton’s Atomic Theory.",
-                "Describe the preparation of Oxygen gas in the laboratory.",
-                "Define 'Hardness of Water' and explain how to remove temporary hardness.",
-                "State the periodic law and explain trends in Ionization Energy across a period.",
-                "Explain 'Molarity' and calculate the mass of 0.5 moles of H₂SO₄.",
-                "List four types of chemical reactions with one example each."
-            ],
-            geography: [
-                "Define 'Rocks' and explain the three main types of rocks.",
-                "Describe the internal structure of the earth (Crust, Mantle, Core).",
-                "Explain the formation of Fold Mountains.",
-                "Discuss the impact of deforestation on the environment.",
-                "Explain the water cycle with the aid of a diagram.",
-                "Describe the characteristics of the Tropical Rainforest vegetation."
-            ],
-            crs: [
-                "Describe the call of Abraham and its significance to his faith.",
-                "Discuss the leadership qualities of Joseph in Egypt.",
-                "Explain the circumstances that led to the death of Eli's sons.",
-                "Describe the encounter between David and Goliath.",
-                "Discuss the significance of the Ten Commandments to the Israelites.",
-                "Explain the role of Deborah as a judge in Israel."
-            ],
-            marketing: [
-                "Define 'Marketing' and explain its importance to a business.",
-                "Discuss the '4 Ps' of the marketing mix.",
-                "Explain the concept of 'Market Segmentation'.",
-                "Differentiate between 'Consumer Markets' and 'Industrial Markets'.",
-                "List and explain five functions of marketing.",
-                "Describe the stages of the 'Product Life Cycle'."
-            ],
-            commerce: [
-                "Define 'Commerce' and show its divisions.",
-                "Explain the functions of a Wholesaler to a Retailer.",
-                "Discuss the importance of 'Insurance' in business.",
-                "Differentiate between 'Home Trade' and 'Foreign Trade'.",
-                "Explain the role of the Central Bank in the Nigerian economy."
-            ],
-            economics: [
-                "Define 'Economics' according to Lord Robbins.",
-                "Explain the laws of Demand and Supply.",
-                "Discuss the concept of 'Price Elasticity of Demand'.",
-                "Explain the factors of production and their respective rewards.",
-                "What is 'Inflation' and what are its causes?"
-            ]
-        };
+    // --- CORE SUBJECTS (EVERYONE) ---
+    "English Language": [
+        "Write a formal letter to the Chairman of your LGA discussing the need for a community library.",
+        "Explain the rules of 'Subject-Verb Agreement' (Concord) with five original examples.",
+        "Summarize the impact of 'Brain Drain' on the Nigerian healthcare system in three sentences.",
+        "Draft a speech to be delivered at an Inter-House Sports event on 'The Importance of Physical Education'."
+    ],
+    "Mathematics": [
+        "Solve the quadratic equation 2x² - 5x + 3 = 0 using the quadratic formula.",
+        "Prove that the angle subtended by an arc at the center is twice the angle at the circumference.",
+        "Calculate the 'Total Surface Area' of a closed cylinder with radius 7cm and height 10cm.",
+        "Explain the difference between 'Mean', 'Median', and 'Mode' in a grouped frequency distribution."
+    ],
+    "Civic Education": [
+        "Discuss the importance of 'The Rule of Law' in maintaining a stable democracy.",
+        "Explain the causes and consequences of 'Human Trafficking' in West Africa.",
+        "Outline the roles of the 'National Drug Law Enforcement Agency' (NDLEA) in Nigeria.",
+        "Discuss the characteristics of a 'Responsible Citizen' in a developing nation."
+    ],
+    "Digital Technology": [
+        "Write the HTML5 code for a table with three rows and two columns.",
+        "Explain the difference between 'Inline', 'Internal', and 'External' CSS styling.",
+        "Write a JavaScript code snippet that uses a 'for loop' to print numbers from 1 to 10.",
+        "Define 'Network Topology' and compare 'Star Topology' with 'Mesh Topology'.",
+        "Discuss the function of the 'Operating System' (OS) in hardware-software interaction.",
+        "Explain 'Cloud Computing' and give two examples of cloud storage services used in Nigeria."
+    ],
 
-        const imageBank = {
-            biology: "[attachment_0](attachment)",
-            geography: "[attachment_1](attachment)",
-            physics: "",
-            chemistry: ""
-        };
+    // --- ART DEPARTMENT (YOUR FOCUS) ---
+    "Literature-in-English": [
+        "Examine the 'Themes of Alienation and Identity' in Buchi Emecheta's 'Second Class Citizen'.",
+        "Discuss the use of 'Irony' in Wole Soyinka's 'The Lion and the Jewel'.",
+        "Analyze the character of 'Adah' as a symbol of female resilience.",
+        "Analyze the poem 'The Panic of Growing Older' and its use of imagery to depict aging."
+    ],
+    "Government": [
+        "Outline the main features of the '1999 Constitution' of the Federal Republic of Nigeria.",
+        "Compare the 'Presidential' and 'Parliamentary' systems of government.",
+        "Explain the 'Policy of Association' used by the French in their West African colonies.",
+        "Discuss the functions of the 'Public Service Commission' in Nigeria."
+    ],
+    "CRS": [
+        "Discuss the 'Call of Abraham' and its significance to the faith of Christians.",
+        "Analyze the leadership qualities of 'Joseph' during the famine in Egypt.",
+        "Explain Paul's teaching on 'Christian Giving' in the book of 2 Corinthians.",
+        "Discuss the trials of 'Job' and his ultimate restoration by God."
+    ],
+    "Economics": [
+        "Define 'Opportunity Cost' and explain its importance to a student's scale of preference.",
+        "Discuss the functions of the 'Central Bank of Nigeria' (CBN) in a recessed economy.",
+        "Explain the 'Law of Diminishing Marginal Utility' with a practical illustration.",
+        "Outline the problems of 'International Trade' for developing countries in Africa."
+    ],
+    "Marketing": [
+        "Explain the '4 Ps of Marketing' and how they apply to launching a new smartphone.",
+        "Discuss the importance of 'Market Research' before starting a small-scale business.",
+        "Explain 'E-Marketing' and its advantages over traditional brick-and-mortar marketing.",
+        "Outline the factors that influence 'Consumer Behavior' in the Nigerian market."
+    ],
 
+    // --- SCIENCE & TRADE ---
+    "Animal Husbandry": [
+        "Draw and label the 'Digestive Tract of a Poultry Bird' (Gizzard, Crop, Proventriculus).",
+        "Discuss the management of 'Livestock' under the 'Intensive System' vs 'Semi-Intensive System'.",
+        "Explain the causes, symptoms, and control of 'Newcastle Disease' in poultry.",
+        "Distinguish between 'Ruminant' (Cattle) and 'Non-Ruminant' (Pig) digestive systems.",
+        "Outline the steps in 'Silage Making' for dry-season feeding of livestock."
+    ],
+    "Biology": [
+        "Explain the process of 'Photosynthesis' and the factors that affect its rate.",
+        "Describe the 'Circulatory System' of a mammal and the function of the heart valves.",
+        "Discuss the 'Theory of Evolution' by Natural Selection according to Charles Darwin.",
+        "Explain 'Homeostasis' and the role of the kidney in Osmoregulation."
+    ],
+    "Physics": [
+        "State 'Newton's Three Laws of Motion' and give a real-life application for each.",
+        "Explain the 'Reflection of Light' on plane mirrors and state the laws of reflection.",
+        "Define 'Work, Energy, and Power' and state their SI units.",
+        "Discuss the 'Kinetic Theory of Matter' and how it explains the three states of matter."
+    ],
+    "Chemistry": [
+        "Explain the 'Atomic Structure' and the arrangement of sub-atomic particles.",
+        "Discuss the 'Periodic Table' and the trends in Atomic Radius across a period.",
+        "State 'Gay-Lussac’s Law' of combining volumes of gases.",
+        "Explain the 'Extraction of Aluminum' from its ore (Bauxite) via electrolysis."
+    ],
+
+    // --- COMMERCIAL ---
+    "Financial Accounting": [
+        "Prepare a 'Trading, Profit and Loss Account' from a given Trial Balance.",
+        "Explain the 'Double Entry System' and the principle of 'Assets = Liabilities + Equity'.",
+        "Discuss the purpose of a 'Bank Reconciliation Statement'.",
+        "Outline the causes of 'Depreciation' of fixed assets."
+    ],
+    "Commerce": [
+        "Explain the 'Functions of Wholesalers' in the channel of distribution.",
+        "Discuss the 'Types of Business Units' (Sole Proprietorship vs Partnership).",
+        "Explain the importance of 'Insurance' in international trade.",
+        "Outline the role of 'Communication' in modern commerce."
+    ]
+};
         const params = new URLSearchParams(window.location.search);
         const sub = params.get('sub') ? params.get('sub').toLowerCase() : 'biology';
         document.getElementById('subTitle').innerText = sub;

@@ -7,102 +7,150 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2e7d32; --bg: #f8fafc; --text: #1e293b; }
-        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); }
+        :root { --primary: #2e7d32; --bg: #f8fafc; --text: #1e293b; --white: #ffffff; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); padding-bottom: 50px; }
         
-        /* Modern Header */
-        .header { background: white; padding: 1.5rem 8%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .brand { display: flex; align-items: center; gap: 15px; color: var(--primary); font-weight: 800; font-size: 22px; }
-        .logout-btn { padding: 10px 20px; border-radius: 12px; border: 2px solid #ff4444; color: #ff4444; text-decoration: none; font-weight: 600; transition: 0.3s; }
-        .logout-btn:hover { background: #ff4444; color: white; }
+        /* Navigation */
+        .header { background: var(--white); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .brand { display: flex; align-items: center; gap: 12px; color: var(--primary); font-weight: 800; font-size: 20px; text-decoration: none; }
+        .menu-toggle { font-size: 24px; cursor: pointer; }
+        
+        /* Sidebar */
+        .sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: var(--white); box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; z-index: 1001; padding: 30px 20px; }
+        .sidebar.active { left: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1000; }
+        .sidebar-overlay.active { display: block; }
+        .side-link { display: flex; align-items: center; gap: 15px; padding: 15px; text-decoration: none; color: var(--text); font-weight: 600; border-radius: 12px; margin-bottom: 10px; }
+        .side-link:hover, .side-link.active { background: #f0fdf4; color: var(--primary); }
 
-        /* Welcome Banner */
-        .hero { padding: 60px 8% 40px; background: white; border-bottom: 1px solid #e2e8f0; }
-        .hero h1 { font-size: 36px; margin: 0; color: var(--text); }
-        .dept-tag { display: inline-block; padding: 6px 16px; background: #dcfce7; color: #166534; border-radius: 20px; font-weight: 600; margin-top: 10px; text-transform: uppercase; font-size: 14px; }
+        /* Hero */
+        .hero { padding: 40px 8%; background: var(--white); border-bottom: 1px solid #e2e8f0; }
+        .dept-tag { display: inline-block; padding: 6px 16px; background: #dcfce7; color: #166534; border-radius: 20px; font-weight: 700; margin-top: 10px; text-transform: uppercase; font-size: 11px; }
 
-        /* Dashboard Grid */
         .container { padding: 40px 8%; }
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 25px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .section-title { font-size: 13px; font-weight: 800; margin-bottom: 20px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
         
-        .card { background: white; padding: 35px; border-radius: 24px; text-decoration: none; color: inherit; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
-        .card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
-        .card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; display: block; }
-        .card h3 { font-size: 22px; margin: 0 0 10px; }
-        .card p { color: #64748b; font-size: 15px; line-height: 1.5; margin: 0; }
-        .card::after { content: '→'; position: absolute; right: 30px; bottom: 30px; font-size: 24px; color: var(--primary); opacity: 0; transition: 0.3s; }
-        .card:hover::after { opacity: 1; }
+        /* Layout */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        
+        .card { background: var(--white); padding: 25px; border-radius: 24px; text-decoration: none; color: inherit; transition: 0.3s; border: 1px solid #e2e8f0; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .card i { font-size: 28px; color: var(--primary); margin-bottom: 15px; display: block; }
+        
+        /* Panel Styles */
+        .panel { background: white; padding: 25px; border-radius: 24px; border: 1px solid #e2e8f0; }
+        .list-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .badge { width: 45px; height: 45px; background: #f0fdf4; color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; text-align: center; line-height: 1.2; }
     </style>
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="overlay"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="brand" style="margin-bottom: 30px;"><i class="fas fa-bars"></i> IGS MENU</div>
+        <a href="dashboard.html" class="side-link active"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="summaries.html" class="side-link"><i class="fas fa-book-open"></i> Summaries</a>
+        <a href="upload.html" class="side-link"><i class="fas fa-cloud-upload-alt"></i> Upload Notes</a>
+        <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+        <a href="index.html" class="side-link" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+
     <header class="header">
-        <div class="brand">
-            <img src="1000397721.jpg" width="45" style="border-radius: 8px;">
-            <span>IGS PORTAL</span>
-        </div>
-        <a href="index.html" class="logout-btn">Logout</a>
+        <a href="dashboard.html" class="brand"><i class="fas fa-graduation-cap"></i> IGS PORTAL</a>
+        <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
     </header>
 
     <section class="hero">
-        <h1 id="studentName">Hello, Student!</h1>
-        <div class="dept-tag" id="deptTag">Department</div>
+        <h1 id="welcomeName">Hello, Scholar!</h1>
+        <div class="dept-tag" id="userDept">Department</div>
     </section>
 
     <div class="container">
-        <p class="section-title">Academic Modules</p>
-        <div class="grid" id="subjectGrid">
+        <div class="info-grid">
+            <div class="panel">
+                <p class="section-title">Today's Timetable</p>
+                <div class="list-item">
+                    <div class="badge">08:30<br>AM</div>
+                    <div><strong>Digital Technology</strong><br><small>Computer Lab</small></div>
+                </div>
+                <div class="list-item">
+                    <div class="badge">11:00<br>AM</div>
+                    <div><strong>English Language</strong><br><small>General Hall</small></div>
+                </div>
             </div>
-        
-        <p class="section-title" style="margin-top: 60px;">Tools & Resources</p>
-        <div class="grid">
-            <a href="summaries.html" class="card">
-                <i class="fas fa-book-open"></i>
-                <h3>Literature Summaries</h3>
-                <p>Access notes for "The Lion and the Jewel" and more.</p>
-            </a>
-            <a href="history.html" class="card">
-                <i class="fas fa-history"></i>
-                <h3>Result History</h3>
-                <p>Track your scores from previous mock examinations.</p>
-            </a>
+
+            <div class="panel">
+                <p class="section-title">School Events</p>
+                <div class="list-item">
+                    <div class="badge" style="background:#fff4e5; color:#ffa117;">MAR<br>23</div>
+                    <div><strong>3rd Term Exams</strong><br><small>Final Revision Week</small></div>
+                </div>
+                <div class="list-item">
+                    <div class="badge" style="background:#eff6ff; color:#3b82f6;">MAR<br>27</div>
+                    <div><strong>Inter-House Sports</strong><br><small>IGS Field</small></div>
+                </div>
+            </div>
         </div>
+
+        <p class="section-title">Learning Modules</p>
+        <div class="subject-grid" id="subjectGrid"></div>
     </div>
 
     <script>
-        // Check if user is logged in
-        const userData = JSON.parse(localStorage.getItem('igs_user'));
-        if (!userData) window.location.href = 'index.html';
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        document.getElementById('overlay').onclick = toggleMenu;
 
-        document.getElementById('studentName').innerText = `Hello, ${userData.name}!`;
-        document.getElementById('deptTag').innerText = userData.dept;
+        // Fetch User Data from index.html
+        const user = JSON.parse(localStorage.getItem('igs_user')) || { name: "Learner", dept: "art" };
+        document.getElementById('welcomeName').innerText = `Hello, ${user.name}!`;
+        document.getElementById('userDept').innerText = `${user.dept.toUpperCase()} Department`;
 
-        // Smart Subject Logic
-        const core = ["English", "Maths", "Civic Education"];
-        const depts = {
-            science: ["Biology", "Chemistry", "Physics", "Geography"],
-            art: ["Literature", "Government", "CRS", "Economics"],
-            commercial: ["Commerce", "Marketing", "Economics", "Accounts"]
+        // 1. Core Subjects (Taken by everyone)
+        const core = ["English Language", "Mathematics", "Civic Education", "Digital Technology"];
+
+        // 2. Department Specific Subjects (Livestock included in all)
+        const departmentBanks = {
+            science: ["Biology", "Physics", "Chemistry", "Further Maths", "Geography", "Animal Husbandry"],
+            art: ["Literature-in-English", "Government", "CRS", "Economics", "Marketing", "Animal Husbandry"],
+            commercial: ["Financial Accounting", "Commerce", "Economics", "Marketing", "Insurance", "Animal Husbandry"]
         };
 
-        const mySubjects = [...core, ...depts[userData.dept]];
+        // 3. Icon Mapping
+        const icons = {
+            'Mathematics': 'fa-calculator',
+            'English Language': 'fa-pen-nib',
+            'Civic Education': 'fa-landmark',
+            'Digital Technology': 'fa-laptop-code',
+            'Biology': 'fa-dna',
+            'Physics': 'fa-atom',
+            'Chemistry': 'fa-flask',
+            'Literature-in-English': 'fa-book-open',
+            'Government': 'fa-university',
+            'CRS': 'fa-cross',
+            'Economics': 'fa-chart-line',
+            'Marketing': 'fa-ad',
+            'Animal Husbandry': 'fa-paw',
+            'Commerce': 'fa-store',
+            'Financial Accounting': 'fa-file-invoice-dollar'
+        };
+
+        // 4. Render Grid
+        const mySubjects = [...core, ...(departmentBanks[user.dept.toLowerCase()] || [])];
         const grid = document.getElementById('subjectGrid');
 
-        mySubjects.forEach(subject => {
+        mySubjects.forEach(sub => {
             grid.innerHTML += `
-                <a href="quiz.html?sub=${subject}" class="card">
-                    <i class="fas ${getIcon(subject)}"></i>
-                    <h3>${subject}</h3>
-                    <p>Objective and Theory questions for SS2 term exams.</p>
+                <a href="quiz.html?sub=${sub}" class="card">
+                    <i class="fas ${icons[sub] || 'fa-graduation-cap'}"></i>
+                    <h3>${sub}</h3>
+                    <p>Revision materials and theory prep for ${sub}.</p>
                 </a>
             `;
         });
-
-        function getIcon(sub) {
-            const icons = { 'Maths': 'fa-calculator', 'English': 'fa-pen-nib', 'Biology': 'fa-dna', 'Physics': 'fa-atom', 'Chemistry': 'fa-flask' };
-            return icons[sub] || 'fa-graduation-cap';
-        }
     </script>
 </body>
 </html>

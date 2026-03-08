@@ -3,71 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance History | IGS</title>
+    <title>IGS Portal | Analytics & History</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2e7d32; --bg: #f8fafc; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding: 40px 8%; }
+        :root { --primary: #2e7d32; --bg: #f8fafc; --text: #1e293b; --white: #ffffff; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); padding-bottom: 50px; }
         
-        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .back-btn { text-decoration: none; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .header { background: var(--white); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .container { padding: 40px 8%; }
         
-        .history-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0; }
+        /* Analytics Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: var(--white); padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; text-align: center; }
+        .stat-val { font-size: 32px; font-weight: 800; color: var(--primary); display: block; }
+        .stat-label { font-size: 14px; color: #64748b; font-weight: 600; }
+
+        /* History Table */
+        .history-panel { background: var(--white); border-radius: 24px; border: 1px solid #e2e8f0; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background: #f1f5f9; padding: 20px; color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-        td { padding: 20px; border-bottom: 1px solid #f1f5f9; font-size: 15px; }
+        th { background: #f8fafc; padding: 20px; font-size: 12px; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid #e2e8f0; }
+        td { padding: 20px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
         
-        .subject-name { font-weight: 700; color: #1e293b; }
-        .score-badge { background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 8px; font-weight: 800; }
-        .empty-state { text-align: center; padding: 60px; color: #64748b; }
-        .empty-state i { font-size: 50px; margin-bottom: 20px; opacity: 0.3; }
+        .score-pill { padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; }
+        .high { background: #dcfce7; color: #166534; }
+        .mid { background: #fef9c3; color: #854d0e; }
+        .low { background: #fee2e2; color: #991b1b; }
+
+        .empty-state { padding: 60px; text-align: center; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-    <div class="header-area">
-        <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
-        <h1 style="margin:0; font-size: 24px;">Academic Performance</h1>
-    </div>
+    <header class="header">
+        <a href="dashboard.html" style="text-decoration:none; color:var(--primary); font-weight:800;">
+            <i class="fas fa-arrow-left"></i> BACK TO DASHBOARD
+        </a>
+        <div style="font-weight: 800;">MY PERFORMANCE</div>
+    </header>
 
-    <div class="history-card">
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>Exam Date</th>
-                    <th>Subject</th>
-                    <th>Performance</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody">
-                </tbody>
-        </table>
-        <div id="emptyMsg" class="empty-state" style="display:none;">
-            <i class="fas fa-clipboard-list"></i>
-            <p>No exams recorded yet. Time to start studying!</p>
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-val" id="totalExams">0</span>
+                <span class="stat-label">Total Tests Completed</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="avgScore">0%</span>
+                <span class="stat-label">Overall Average</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="topSubject">N/A</span>
+                <span class="stat-label">Strongest Subject</span>
+            </div>
+        </div>
+
+        <p style="font-weight:800; color:#64748b; margin-bottom:20px;">EXAM LOG</p>
+        <div class="history-panel">
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    </tbody>
+            </table>
+            <div id="emptyMsg" class="empty-state" style="display:none;">
+                <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom:10px;"></i>
+                <p>No exams recorded yet. Go take a quiz!</p>
+            </div>
         </div>
     </div>
 
     <script>
         const history = JSON.parse(localStorage.getItem('igs_history')) || [];
         const body = document.getElementById('historyBody');
-        const empty = document.getElementById('emptyMsg');
+        const emptyMsg = document.getElementById('emptyMsg');
 
         if (history.length === 0) {
+            emptyMsg.style.display = 'block';
             document.getElementById('historyTable').style.display = 'none';
-            empty.style.display = 'block';
         } else {
-            // Show latest exams first
-            history.reverse().forEach(item => {
-                body.innerHTML += `
+            // Sort history: Newest first
+            history.reverse();
+
+            let totalScore = 0;
+            const subjectStats = {};
+
+            history.forEach(item => {
+                totalScore += parseInt(item.score);
+                
+                // Track stats per subject
+                if (!subjectStats[item.subject]) subjectStats[item.subject] = { scores: [], total: 0 };
+                subjectStats[item.subject].scores.push(parseInt(item.score));
+                subjectStats[item.subject].total += parseInt(item.score);
+
+                // Determine score class
+                let sClass = 'low';
+                if (item.score >= 70) sClass = 'high';
+                else if (item.score >= 45) sClass = 'mid';
+
+                const row = `
                     <tr>
-                        <td style="color: #64748b;">${item.date}</td>
-                        <td class="subject-name">${item.subject}</td>
-                        <td><span class="score-badge">${item.score}</span></td>
+                        <td><strong>${item.subject}</strong></td>
+                        <td>${item.type || 'Objective'}</td>
+                        <td style="color:#94a3b8">${item.date || 'Today'}</td>
+                        <td><span class="score-pill ${sClass}">${item.score}%</span></td>
                     </tr>
                 `;
+                body.innerHTML += row;
             });
+
+            // Calculate Analytics
+            document.getElementById('totalExams').innerText = history.length;
+            document.getElementById('avgScore').innerText = Math.round(totalScore / history.length) + "%";
+
+            // Find Best Subject
+            let bestSub = "N/A";
+            let maxAvg = 0;
+            for (const sub in subjectStats) {
+                let avg = subjectStats[sub].total / subjectStats[sub].scores.length;
+                if (avg > maxAvg) {
+                    maxAvg = avg;
+                    bestSub = sub;
+                }
+            }
+            document.getElementById('topSubject').innerText = bestSub;
         }
     </script>
 </body>

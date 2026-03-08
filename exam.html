@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Sheet | IGS Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #2e7d32; --bg: #FFFDD0; --white: #ffffff; }
+        body { background: var(--bg); padding: 30px; font-family: 'Inter', sans-serif; color: #1e293b; margin: 0; }
+        
+        .exam-sheet { 
+            background: var(--white); 
+            padding: 40px; 
+            border: 2px solid var(--primary); 
+            max-width: 800px; 
+            margin: auto; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .header-meta { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
+        .header-meta img { border-radius: 10px; margin-bottom: 10px; }
+        .header-meta h1 { margin: 5px 0; text-transform: uppercase; font-size: 22px; color: var(--primary); }
+        
+        .q-block { margin-bottom: 25px; padding: 20px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; }
+        .q-text { font-weight: 700; font-size: 16px; margin-bottom: 15px; display: block; }
+        
+        /* Obj Styling */
+        .option-label { display: block; padding: 12px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+        .option-label:hover { background: #f0fdf4; border-color: var(--primary); }
+        input[type="radio"] { margin-right: 10px; accent-color: var(--primary); }
+
+        /* Theory Styling */
+        textarea { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 15px; box-sizing: border-box; resize: vertical; }
+        textarea:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+        .footer { text-align: center; margin-top: 40px; }
+        .btn { background: var(--primary); color: white; padding: 18px 60px; border: none; cursor: pointer; font-weight: 800; border-radius: 12px; font-size: 16px; transition: 0.3s; width: 100%; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(46,125,50,0.3); }
+    </style>
+</head>
+<body>
+
+    <div class="exam-sheet">
+        <div class="header-meta">
+            <img src="1000397721.jpg" width="65" alt="School Logo">
+            <h1 id="pageTitle">SUBJECT - TYPE</h1>
+            <div id="timer" style="color: #dc2626; font-weight: 800; margin-top: 10px;">Time Left: 40:00</div>
+        </div>
+        
+        <div id="questionsContainer">
+            </div>
+        
+        <div class="footer">
+            <button onclick="handleSubmit()" class="btn">FINISH AND SUBMIT SCRIPT</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Objects (Replace with your actual data from your files)
+        const all_data = {
+            obj: {
+                biology: [
+                    {q: "Which organelle is the powerhouse of the cell?", a: "Nucleus", b: "Mitochondria", c: "Ribosome", d: "Vacuole", correct: "B"},
+                    {q: "The process of maintaining a constant internal environment is...", a: "Osmosis", b: "Homeostasis", c: "Diffusion", d: "Excretion", correct: "B"}
+                ],
+                maths: [
+                    {q: "Solve for x: 2x + 5 = 15.", a: "5", b: "10", c: "7", d: "15", correct: "A"}
+                ]
+            },
+            theory: {
+                biology: [
+                    "Define 'Cell Theory' and state its three main pillars.",
+                    "Explain the process of photosynthesis with a balanced chemical equation."
+                ],
+                maths: [
+                    "State and prove Pythagoras Theorem.",
+                    "Explain the difference between a Scalar and Vector quantity."
+                ]
+            }
+        };
+
+        // URL Params Logic
+        const params = new URLSearchParams(window.location.search);
+        const sub = params.get('sub') ? params.get('sub').toLowerCase() : 'biology';
+        const type = params.get('type') === 'obj' ? 'obj' : 'theory';
+
+        document.getElementById('pageTitle').innerText = `${sub} - ${type}`;
+
+        const container = document.getElementById('questionsContainer');
+        const questions = all_data[type][sub] || ["No questions found."];
+
+        function renderQuestions() {
+            container.innerHTML = "";
+            questions.forEach((q, i) => {
+                let html = `<div class="q-block"><span class="q-text">Question ${i + 1}: ${type === 'obj' ? q.q : q}</span>`;
+                
+                if (type === 'obj') {
+                    html += `
+                        <label class="option-label"><input type="radio" name="q${i}" value="A"> A. ${q.a}</label>
+                        <label class="option-label"><input type="radio" name="q${i}" value="B"> B. ${q.b}</label>
+                        <label class="option-label"><input type="radio" name="q${i}" value="C"> C. ${q.c}</label>
+                        <label class="option-label"><input type="radio" name="q${i}" value="D"> D. ${q.d}</label>
+                    `;
+                } else {
+                    html += `<textarea rows="4" class="theory-ans" placeholder="Provide detailed explanation..."></textarea>`;
+                }
+                html += `</div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function handleSubmit() {
+            if(!confirm("Are you sure you want to submit?")) return;
+
+            let finalScore = 0;
+
+            if (type === 'obj') {
+                questions.forEach((q, i) => {
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selected && selected.value === q.correct) finalScore++;
+                });
+                finalScore = Math.round((finalScore / questions.length) * 100);
+            } else {
+                // Mock grading for theory based on effort (word count)
+                const answers = document.querySelectorAll('.theory-ans');
+                let points = 0;
+                answers.forEach(a => { if(a.value.trim().length > 20) points += (100 / questions.length); });
+                finalScore = Math.round(points);
+            }
+
+            // Save to Local History
+            const history = JSON.parse(localStorage.getItem('igs_history')) || [];
+            history.push({
+                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+                subject: sub.toUpperCase() + ` (${type})`,
+                score: finalScore + "%"
+            });
+            localStorage.setItem('igs_history', JSON.stringify(history));
+
+            window.location.href = `result.html?sub=${sub}&score=${finalScore}`;
+        }
+
+        // Timer Logic (40 mins)
+        let timeLeft = 2400;
+        const timerNode = document.getElementById('timer');
+        setInterval(() => {
+            if(timeLeft <= 0) handleSubmit();
+            timeLeft--;
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            timerNode.innerText = `Time Left: ${m}:${s < 10 ? '0' : ''}${s}`;
+        }, 1000);
+
+        renderQuestions();
+    </script>
+</body>
+</html>

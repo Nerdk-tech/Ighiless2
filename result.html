@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,46 +8,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2e7d32; --bg: #f8fafc; }
+        :root { --primary: #2e7d32; --bg: #f8fafc; --gold: #ffd700; --red: #d32f2f; }
         body { 
             margin: 0; font-family: 'Inter', sans-serif; background: var(--bg);
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            padding: 20px;
         }
         .result-card {
-            background: white; padding: 50px; border-radius: 30px; width: 100%; max-width: 500px;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-top: 10px solid var(--primary);
+            background: white; padding: 50px 30px; border-radius: 30px; width: 100%; max-width: 450px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border-top: 10px solid var(--primary);
         }
-        .confetti-icon { font-size: 60px; color: #ffd700; margin-bottom: 20px; }
-        h1 { margin: 0; color: var(--primary); font-size: 32px; font-weight: 900; }
-        .subject-tag { display: inline-block; padding: 8px 20px; background: #e8f5e9; color: #2e7d32; border-radius: 50px; font-weight: 700; margin-top: 15px; }
+        .icon-box { font-size: 60px; margin-bottom: 20px; transition: 0.5s; }
+        .pass { color: var(--gold); }
+        .fail { color: var(--red); }
+
+        h1 { margin: 0; color: #1e293b; font-size: 28px; font-weight: 900; }
+        .subject-tag { display: inline-block; padding: 6px 20px; background: #e8f5e9; color: var(--primary); border-radius: 50px; font-weight: 700; margin-top: 10px; text-transform: uppercase; font-size: 13px; }
         
         .score-circle {
-            width: 150px; height: 150px; border: 8px solid #f1f5f9; border-top-color: var(--primary);
+            width: 140px; height: 140px; border: 10px solid #f1f5f9; border-top-color: var(--primary);
             border-radius: 50%; margin: 30px auto; display: flex; align-items: center; justify-content: center;
-            font-size: 36px; font-weight: 900; color: #1e293b; flex-direction: column;
+            font-size: 42px; font-weight: 900; color: #1e293b; position: relative;
         }
-        .score-circle span { font-size: 14px; color: #64748b; font-weight: 400; }
+        .score-circle span { position: absolute; bottom: -25px; font-size: 14px; color: #64748b; font-weight: 600; width: 100px; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px; }
-        .btn { padding: 16px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.3s; }
-        .btn-history { background: var(--primary); color: white; }
+        #feedbackText { color: #64748b; line-height: 1.6; margin-top: 35px; font-weight: 500; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .btn { padding: 16px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.3s; font-size: 14px; border: none; cursor: pointer; }
+        .btn-history { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(46,125,50,0.2); }
         .btn-dash { background: #f1f5f9; color: #1e293b; }
-        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
     </style>
 </head>
 <body>
 
 <div class="result-card">
-    <div class="confetti-icon"><i class="fas fa-trophy"></i></div>
-    <h1>Exam Submitted!</h1>
-    <div class="subject-tag" id="resSubject">Mathematics</div>
+    <div class="icon-box" id="resIcon"><i class="fas fa-trophy"></i></div>
+    <h1 id="resStatus">Exam Submitted!</h1>
+    <div class="subject-tag" id="resSubject">Loading...</div>
 
     <div class="score-circle">
         <div id="resScore">0</div>
-        <span id="resTotal">out of 20</span>
+        <span id="resTotal">out of 10</span>
     </div>
 
-    <p style="color: #64748b; line-height: 1.6;">Great job! Your score has been added to your academic performance records.</p>
+    <p id="feedbackText">Processing your performance...</p>
 
     <div class="btn-group">
         <a href="history.html" class="btn btn-history">View History</a>
@@ -55,24 +62,47 @@
 </div>
 
 <script>
-    // Logic to grab result from URL or LocalStorage
     const params = new URLSearchParams(window.location.search);
-    const score = params.get('score') || 0;
-    const total = params.get('total') || 10;
+    const score = parseInt(params.get('score')) || 0;
+    const total = parseInt(params.get('total')) || 10;
     const subject = params.get('sub') || "Examination";
-
+    
+    // UI Updates
     document.getElementById('resScore').innerText = score;
     document.getElementById('resTotal').innerText = `out of ${total}`;
     document.getElementById('resSubject').innerText = subject;
 
-    // Save to History (LocalStorage replaces the PHP Session logs)
-    const history = JSON.parse(localStorage.getItem('igs_history')) || [];
-    history.push({
-        date: new Date().toLocaleString(),
-        subject: subject,
-        score: `${score}/${total}`
-    });
-    localStorage.setItem('igs_history', JSON.stringify(history));
+    const percentage = (score / total) * 100;
+    const feedback = document.getElementById('feedbackText');
+    const statusH1 = document.getElementById('resStatus');
+    const iconBox = document.getElementById('resIcon');
+
+    if (percentage >= 50) {
+        statusH1.innerText = "Congratulations!";
+        iconBox.innerHTML = '<i class="fas fa-medal"></i>';
+        iconBox.className = "icon-box pass";
+        feedback.innerText = "Excellent work! You have shown a strong understanding of this subject.";
+    } else {
+        statusH1.innerText = "Keep Improving!";
+        iconBox.innerHTML = '<i class="fas fa-book-reader"></i>';
+        iconBox.className = "icon-box fail";
+        feedback.innerText = "Not quite there yet. Review your notes and try again to master this topic.";
+    }
+
+    // IMPORTANT: Only save if the "saved" flag isn't in the URL 
+    // This prevents duplicate history entries on refresh
+    if (!params.has('saved')) {
+        const history = JSON.parse(localStorage.getItem('igs_history')) || [];
+        history.push({
+            date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+            subject: subject,
+            score: `${score}/${total}`
+        });
+        localStorage.setItem('igs_history', JSON.stringify(history));
+        
+        // Add 'saved' to URL silently so refresh doesn't double-save
+        window.history.replaceState({}, '', window.location.href + '&saved=true');
+    }
 </script>
 
 </body>

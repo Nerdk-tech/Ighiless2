@@ -10,87 +10,160 @@
         :root { --primary: #2e7d32; --bg: #f1f5f9; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #1e293b; padding-bottom: 50px; }
         
-        .nav-header { background: white; padding: 20px 8%; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); sticky: top; z-index: 10; }
+        .nav-header { background: white; padding: 20px 8%; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .back-link { text-decoration: none; color: var(--primary); font-weight: 700; }
         
         .container { padding: 40px 8%; max-width: 1200px; margin: auto; }
         .page-title { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--primary); }
         .page-sub { color: #64748b; margin-bottom: 40px; }
 
-        /* Grid Layout */
         .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
         
-        /* Modern Card Design */
-        .book-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
+        .book-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid #e2e8f0; transition: 0.3s; display: flex; flex-direction: column; }
         .book-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--primary); }
         
-        .author { font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .author { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .title { font-size: 22px; font-weight: 800; margin: 0 0 15px 0; line-height: 1.2; }
         
-        .summary-text { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .summary-text.expanded { display: block; overflow: visible; }
+        .summary-preview { font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .meta-section { border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: 15px; font-size: 14px; }
+        .meta-section { border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: auto; font-size: 14px; }
         .meta-label { font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-        .tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #64748b; }
+        .tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 11px; color: #64748b; font-weight: 600; }
 
-        .read-more { background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; padding: 0; font-size: 14px; }
+        .btn-open { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; width: 100%; transition: 0.2s; }
+        .btn-open:hover { opacity: 0.9; }
+
+        /* Full Screen Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 24px; padding: 40px; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: #64748b; }
+        .modal h2 { color: var(--primary); margin-top: 0; font-size: 28px; }
+        .full-text { line-height: 1.8; color: #334155; font-size: 16px; white-space: pre-line; }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i></a>
-        <h2 style="margin:0; font-size: 20px;">Library Summary</h2>
+        <h2 style="margin:0; font-size: 18px;">Literature Library</h2>
     </div>
 
     <div class="container">
-        <h1 class="page-title">WAEC/NECO Novels</h1>
-        <p class="page-sub">Comprehensive summaries, character analysis, and themes for SS2/SS3.</p>
+        <h1 class="page-title">WAEC/NECO Reading List</h1>
+        <p class="page-sub">Master your texts for the 2026 examinations with full analysis.</p>
 
-        <div class="book-grid" id="bookGrid">
-            </div>
+        <div class="book-grid" id="bookGrid"></div>
+    </div>
+
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                </div>
+        </div>
     </div>
 
     <script>
         const novels = [
-            { id: "antony", title: "Antony and Cleopatra", author: "William Shakespeare", summary: "A tragic play detailing the relationship between Mark Antony and Cleopatra, Queen of Egypt...", characters: "Mark Antony, Cleopatra, Octavius Caesar", themes: ["Love vs. Duty", "Power", "Loyalty"] },
-            { id: "lion_jewel", title: "The Lion and the Jewel", author: "Wole Soyinka", summary: "Set in the village of Ilujinle, the play tells the story of Sidi, the village 'jewel,' and her suitors...", characters: "Sidi, Baroka, Lakunle", themes: ["Tradition", "Modernity", "Vanity"] },
-            { id: "mockingbird", title: "To Kill a Mockingbird", author: "Harper Lee", summary: "Set in the American South, Atticus Finch defends a black man, Tom Robinson, falsely accused of a crime...", characters: "Scout, Atticus, Tom Robinson", themes: ["Racial Injustice", "Moral Education"] },
-            { id: "citizen", title: "Second Class Citizen", author: "Buchi Emecheta", summary: "Adah travels to London to join her husband, finding herself living as a second-class citizen...", characters: "Adah, Francis, Pa Noble", themes: ["Empowerment", "Prejudice", "Immigration"] },
-            { id: "dawn", title: "Unexpected Joy at Dawn", author: "Alex Agyei-Agyiri", summary: "Follows Nii Tackie and Mama Orojo during the 'Ghana Must Go' era, highlighting identity and roots...", characters: "Nii Tackie, Mama Orojo", themes: ["Xenophobia", "Identity", "Political Conflict"] }
+            { 
+                id: "lion_jewel", 
+                title: "The Lion and the Jewel", 
+                author: "Wole Soyinka", 
+                summary: `Set in the Yoruba village of Ilujinle, this play centers on the competition between Lakunle, a modern but pompous schoolteacher, and Baroka, the 'Lion' (village chief), for the hand of Sidi, the village beauty.
+
+                Lakunle represents a superficial version of Western modernity, refusing to pay the bride-price, while Baroka represents the cunning strength of tradition. After tricking Sidi into believing he is impotent, Baroka seduces her. Sidi eventually chooses the aged, powerful Chief over the weak schoolteacher, celebrating the vitality of her African roots over Lakunle's confused modernism.`, 
+                characters: "Sidi (The Jewel), Baroka (The Lion), Lakunle, Sadiku", 
+                themes: ["Tradition vs. Modernity", "The Power of Cunning", "Vanity", "Gender Roles"] 
+            },
+            { 
+                id: "citizen", 
+                title: "Second Class Citizen", 
+                author: "Buchi Emecheta", 
+                summary: `This semi-autobiographical novel follows Adah, a Nigerian woman who dreams of a better life in the UK. After marrying Francis and moving to London, her dreams are shattered by the harsh reality of racism and her husband's abusive, lazy behavior.
+
+                Adah is forced to live in poverty, treated as a 'second-class citizen' by British society and her own husband. The story is a powerful account of her struggle for independence, her survival as a mother, and her ultimate realization that she must write her own destiny.`, 
+                characters: "Adah, Francis, Pa Noble, Vicky", 
+                themes: ["Struggle for Independence", "Racial Prejudice", "Gender Inequality", "Motherhood"] 
+            },
+            { 
+                id: "dawn", 
+                title: "Unexpected Joy at Dawn", 
+                author: "Alex Agyei-Agyiri", 
+                summary: `The novel is set during the historical 'Ghana Must Go' and 'Aliens Compliance Order' periods. It follows two siblings, Nii Tackie and Mama Orojo, who are separated by national borders and political upheaval.
+
+                Nii Tackie, a Ghanaian living in Nigeria, faces intense xenophobia and economic hardship. Meanwhile, Mama Orojo travels across borders to find him. It is a haunting exploration of African identity, the arbitrary nature of colonial borders, and the resilience of family bonds amidst political chaos.`, 
+                characters: "Nii Tackie, Mama Orojo, Massa, Linda", 
+                themes: ["Xenophobia", "Identity and Belonging", "Political Instability", "Family Bonds"] 
+            },
+            { 
+                id: "antony", 
+                title: "Antony and Cleopatra", 
+                author: "William Shakespeare", 
+                summary: `A tragedy of epic proportions, it follows the illicit and passionate love between the Roman General Mark Antony and the Egyptian Queen Cleopatra. Their obsession distracts Antony from his duties as a leader of the Roman Triumvirate.
+
+                As Octavius Caesar rises to consolidate power, Antony's loyalty is torn between the rigid, political world of Rome and the sensual, indulgent world of Egypt. The play concludes with the tragic suicides of both lovers after their defeat at the Battle of Actium.`, 
+                characters: "Mark Antony, Cleopatra, Octavius Caesar, Enobarbus", 
+                themes: ["Love vs. Duty", "East vs. West", "Betrayal", "Power and Ambition"] 
+            }
         ];
 
         const grid = document.getElementById('bookGrid');
+        const modal = document.getElementById('bookModal');
+        const modalBody = document.getElementById('modalBody');
 
-        novels.forEach(book => {
-            grid.innerHTML += `
-                <div class="book-card">
-                    <div class="author">${book.author}</div>
-                    <h3 class="title">${book.title}</h3>
-                    <p class="summary-text" id="text-${book.id}">${book.summary}</p>
-                    <button class="read-more" onclick="toggleText('${book.id}')">Read Full Summary</button>
-                    
-                    <div class="meta-section">
-                        <span class="meta-label"><i class="fas fa-users"></i> Key Characters</span>
-                        <div style="color: #64748b">${book.characters}</div>
-                    </div>
-                    
-                    <div class="meta-section">
-                        <span class="meta-label"><i class="fas fa-tags"></i> Core Themes</span>
-                        <div class="tags">
-                            ${book.themes.map(t => `<span class="tag">${t}</span>`).join('')}
+        function renderBooks() {
+            novels.forEach(book => {
+                grid.innerHTML += `
+                    <div class="book-card">
+                        <div class="author">${book.author}</div>
+                        <h3 class="title">${book.title}</h3>
+                        <p class="summary-preview">${book.summary}</p>
+                        
+                        <div class="meta-section">
+                            <span class="meta-label"><i class="fas fa-users"></i> Characters</span>
+                            <div style="color: #64748b; font-size:13px;">${book.characters}</div>
                         </div>
+                        
+                        <div class="meta-section">
+                            <span class="meta-label"><i class="fas fa-tags"></i> Themes</span>
+                            <div class="tags">
+                                ${book.themes.map(t => `<span class="tag">${t}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <button class="btn-open" onclick="openBook('${book.id}')">Read Full Analysis</button>
                     </div>
+                `;
+            });
+        }
+
+        function openBook(id) {
+            const book = novels.find(b => b.id === id);
+            modalBody.innerHTML = `
+                <div class="author">${book.author}</div>
+                <h2>${book.title}</h2>
+                <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+                <p class="full-text">${book.summary}</p>
+                <div style="margin-top:30px; padding:20px; background:#f8fafc; border-radius:15px;">
+                    <h4 style="margin:0 0 10px 0">Exam Focus:</h4>
+                    <p style="font-size:14px; margin:0">Make sure to study <strong>${book.characters.split(',')[0]}</strong>'s character development for your theory questions.</p>
                 </div>
             `;
-        });
-
-        function toggleText(id) {
-            const el = document.getElementById(`text-${id}`);
-            el.classList.toggle('expanded');
+            modal.style.display = 'flex';
         }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
+
+        renderBooks();
     </script>
 </body>
 </html>
